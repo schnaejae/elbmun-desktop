@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lifecycle year="2015">
+	<duration type="elbmun" start="20.04.2015" end="24.04.2015"/>
+	<coordinator email="mira.luethe@elbmun.org">Mira Lüthe</coordinator>
+	<coordinator email="natalie.brindle@elbmun.org">Natalie Brindle</coordinator>
+	<coordinator email="mario.baumann@elbmun.org">Mario Baumann</coordinator>
+	<motto>Frozen Conflicts - Breaking the Ice</motto>
+<committee long="The UN Security Council" active="true">SC</committee><committee long="Conseil Européen" active="true">CE (French)</committee><committee long="Committee on Disarmament and International Security" active="true">DISEC</committee><committee long="Social, Humanitarian and Cultural Committee" active="true">SOCHUM</committee><duration type="registration" start="19.01.2015" end="15.02.2015"/><duration type="registration" start="23.02.2015" end="15.03.2015"/><fee name="Regular">82</fee><duration type="registration" start="23.03.2015" end="12.04.2015"/><fee name="Special Fee Conseil Européen">32</fee></lifecycle>

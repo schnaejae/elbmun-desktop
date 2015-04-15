@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <committee name="United Nations Security Council" organization="eu">
+    
+    
+    <members>
+      
+      
+    <state iso="ao" present="true" voting="false">Angola</state><state iso="td" present="true" voting="false">Chad</state><state iso="cl" present="true" voting="true">Chile</state><state iso="cn" present="true" voting="true">China</state><state iso="fr" present="true" voting="true">France</state><state iso="jo" present="true" voting="true">Jordan</state><state iso="lt" present="true" voting="true">Lithuania</state><state iso="my" present="true" voting="true">Malaysia</state><state iso="nz" present="true" voting="true">New Zealand</state><state iso="ng" present="true" voting="true">Nigeria</state><state iso="ru" present="true" voting="true">Russian Federation</state><state iso="es" present="true" voting="true">Spain</state><state iso="gb" present="true" voting="true">United Kingdom</state><state iso="us" present="true" voting="true">United States</state><state iso="ve" present="true" voting="false">Venezuela</state></members>
+    <vote type="substantial" majority="9" veto="true" divide="false"/>
+  <topic current="true">ladida</topic></committee>
+  <general speakertime="50" warningtime="5" autonext="true"><speaker>td</speaker><speaker>cl</speaker><speaker>cn</speaker><speaker>fr</speaker><speaker>us</speaker><speaker>my</speaker></general>
+  <resolution speakertime="23" warningtime="10" autonext="true"><speaker>_ai</speaker><speaker>fr</speaker></resolution>
+  <single speakertime="40" warningtime="20" autoplay="true" speaker="cl"/>
+  <moderated topic="Questions of yet undecided matter" speakertime="50" warningtime="36" autoplay="true" speaker="td" duration="35" durationwarning="3"/>
+  <unmoderated topic="Geht das schon?" duration="19" durationwarning="2"/>
+</config>

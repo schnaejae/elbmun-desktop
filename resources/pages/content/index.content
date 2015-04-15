@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>elbMUN - %title%</title>
+        <meta name="description" content="Homepage of Elbe Model United Nations">
+        <meta name="keywords" content="elbMUN, MUN, Dresden, Elbe, Conference, Sächsischer Landtag, Elbe Model United Nations">
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="css/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        <link href="css/print.css" media="print" rel="stylesheet" type="text/css" />
+        <link href="css/special.css" rel="stylesheet" type="text/css" />
+        <!--[if lt IE 8]>
+            <link href="css/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        <![endif]-->
+        %css%
+    </head>
+
+    <body>
+        <header>
+            <div class="container-wrapper">
+                <!-- brand logo -->
+                <a href="index.php" class="brand-logo">
+                    <img src="img/logo-elbmun.png" alt="elbMUN Logo"/>
+                </a>
+
+                <div id="nav">
+                    <ul>
+                        %navi%
+                    </ul>
+                </div>
+            </div>
+            %header%
+        </header>
+
+        <div class="container-wrapper%big%">
+            %body%
+        </div>
+
+        <div class="sponsors">
+            <div class="container-wrapper">
+                %sponsors%
+            </div>
+        </div>
+
+        <footer>
+            <div class="container-wrapper">
+                %footer%
+                <hr>
+
+                <p>Design Handcrafted with <i class="icon-heart"></i> by <a href="http://www.chasmo.de" target="_blank">Martin Seeler</a>. Flag Icons provided by <a href="http://icondrawer.com" target="_blank">Icondrawer</a></p>
+
+            </div>
+        </footer>
+        <script src="js/jquery-1.9.1.min.js"></script>
+        <script src="js/responsive-nav.min.js"></script>
+        <script src="js/jquery.tipsy.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var navigation = responsiveNav("#nav", {
+                    animate:false, // Boolean: Use CSS3 transitions, true or false
+                    label: "<i class='icon-reorder'></i>",
+                    insert: "after"
+                });
+                %tabScript%
+            });
+        </script>
+        %script%
+    </body>
+</html>
