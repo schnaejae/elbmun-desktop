@@ -18,7 +18,7 @@ var calculateVotesNeeded = function () {
     } else if (vote.majority == "simple") {
         return parseInt((present * 0.5) + 1);
     } else if (vote.majority == "twothird") {
-        return parseInt((present * 2 / 3) + 1);
+        return present % 3 == 0 ? (present * 2 / 3) : parseInt((present * 2 / 3) + 1);
     }
 };
 var prepareFirstVotingList = function () {
@@ -50,114 +50,67 @@ var prepareFirstVotingList = function () {
 };
 var prepareSecondVotingList = function () {
     secondVoteList.children().each(function () {
-        if ($(this).data('voting')) {
-            $(this).find('.vote-second-pass').hide()
-                .removeClass('highlight');
-        }
-        $(this).find('button').prop("disabled", true);
+        $(this).find('button').removeClass('highlight');
+        $(this).hide();
     });
 
 };
 var calculateSecondOutcome = function () {
-    var yes = 0;
-    var no = 0;
-    var uncast = 0;
-    var veto = false;
-    var voted;
-    var yesText, noText;
+    var result = {
+        yes: 0,
+        no: 0,
+        uncast: 0,
+        veto: false
+    };
     secondVoteList.children().each(function () {
-        var call = $(this).find('.highlight');
-        switch (call.text()) {
-            case "Yes":
-                yes++;
-                break;
-            case "No":
-                no++;
-                if (vote.veto && $(this).data('veto')) {
-                    veto = true;
-                }
-                break;
-            case "Pass":
-                no++;
-                break;
-            case "Yes (Rights)":
-                outcomeRights.append("<tr data-iso='" + $(this).data('iso') + "'><td class='vote-list'><img src='img/flags_small/" + $(this).data('iso') + ".png' alt='" + $(this).data('iso') + "' /></td><td class='vote-list'>" + $(this).data('name') + "</td><td class='vote-list' style='width:auto;text-align: center;'>In Favour</td>");
-                yes++;
-                break;
-            case "No (Rights)":
-                outcomeRights.append("<tr data-iso='" + $(this).data('iso') + "'><td class='vote-list'><img src='img/flags_small/" + $(this).data('iso') + ".png' alt='" + $(this).data('iso') + "' /></td><td class='vote-list'>" + $(this).data('name') + "</td><td class='vote-list' style='width:auto;text-align: center;'>Against</td>");
-                no++;
-                break;
-            default:
-                uncast++;
-                break;
+        if ($(this).data('passing')) {
+            var call = $(this).find('.highlight');
+            switch (call.text()) {
+                case "Yes":
+                    result.yes = result.yes + 1;
+                    break;
+                case "No":
+                    result.no = result.no + 1;
+                    if (vote.veto && $(this).data('veto')) {
+                        result.veto = true;
+                    }
+                    break;
+                case "Pass":
+                    result.no = result.no + 1;
+                    if (vote.veto && $(this).data('veto')) {
+                        result.veto = true;
+                    }
+                    break;
+                case "Yes (Rights)":
+                    outcomeRights.append("<tr data-iso='" + $(this).data('iso') + "'><td class='vote-list'><img src='img/flags_small/" + $(this).data('iso') + ".png' alt='" + $(this).data('iso') + "' /></td><td class='vote-list'>" + $(this).data('name') + "</td><td class='vote-list' style='width:auto;text-align: center;'>In Favour</td>");
+                    result.yes = result.yes + 1;
+                    break;
+                case "No (Rights)":
+                    outcomeRights.append("<tr data-iso='" + $(this).data('iso') + "'><td class='vote-list'><img src='img/flags_small/" + $(this).data('iso') + ".png' alt='" + $(this).data('iso') + "' /></td><td class='vote-list'>" + $(this).data('name') + "</td><td class='vote-list' style='width:auto;text-align: center;'>Against</td>");
+                    result.no = result.no + 1;
+                    break;
+                default:
+                    result.uncast = result.uncast + 1;
+                    break;
+            }
         }
     });
-    if (uncast > 0) {
-        outcomeMessage.html("Second Vote still in progress!");
-        outcomeResult.text("No Results yet");
-        return "revote";
-    }
-    if (yes > 0) {
-        yesText = yes > 1 ? yes + " Vote in Favour" : yes + " Votes in Favour";
-    } else {
-        yesText = "No Vote in Favour";
-    }
-    if (no > 0) {
-        noText = no > 1 ? ", " + no + " Vote Against" : ", " + no + " Votes Against";
-    } else {
-        noText = ", No Vote Against";
-    }
-    if (vote.veto && veto) {
-        outcomeMessage.html("Vote <b>failed</b> due to a Veto!");
-        outcomeResult.html(yesText + noText);
-        return "failed"
-    }
-    voted = yes + no;
-    if (!isNaN(parseInt(vote.majority))) {
-        if (yes >= parseInt(vote.majority)) {
-            outcomeMessage.html("Vote <b>succeeded</b>!");
-            outcomeResult.html(yesText + noText);
-            return "succeeded"
-        } else {
-            outcomeMessage.html("Vote <b>failed</b>!");
-            outcomeResult.html(yesText + noText);
-            return "failed";
-        }
-    } else if (vote.majority == "simple") {
-        if (yes >= parseInt((voted * 0.5) + 1)) {
-            outcomeMessage.html("Vote <b>succeeded</b>!");
-            outcomeResult.html(yesText + noText);
-            return "succeeded"
-        } else {
-            outcomeMessage.html("Vote <b>failed</b>!");
-            outcomeResult.html(yesText + noText);
-            return "failed";
-        }
-    } else if (vote.majority == "twothird") {
-        if (yes >= parseInt((voted * 2 / 3) + 1)) {
-            outcomeMessage.html("Vote <b>succeeded</b>!");
-            outcomeResult.html(yesText + noText);
-            return "succeeded"
-        } else {
-            outcomeMessage.html("Vote <b>failed</b>!");
-            outcomeResult.html(yesText + noText);
-            return "failed";
-        }
-    }
+    return result;
 };
 var calculateOutcome = function () {
     var yes = 0;
     var no = 0;
     var abstain = 0;
-    var pass = 0;
     var uncast = 0;
     var veto = false;
     var voted;
+    var needed;
     var absText = "", yesText, noText;
     if (vote.type == "substantial") {
         firstVoteList.children('*[data-status="state"]').each(function () {
             outcomeRights.children('*[data-iso="' + $(this).data('iso') + '"]').remove();
+            secondVoteList.children('*[data-iso="' + $(this).data('iso') + '"]').hide()
+                .data('passing', false);
             var call = $(this).find('.highlight');
             switch (call.text()) {
                 case "Yes":
@@ -170,18 +123,11 @@ var calculateOutcome = function () {
                     }
                     break;
                 case "Abstain":
-                    if (!vote.divide) {
-                        abstain++;
-                    } else {
-                        uncast++;
-                    }
+                    abstain++;
                     break;
                 case "Pass":
-                    if (!vote.divide) {
-                        pass++;
-                    } else {
-                        uncast++;
-                    }
+                    secondVoteList.children('*[data-iso="' + $(this).data('iso') + '"]').show()
+                        .data('passing', true);
                     break;
                 case "Yes (Rights)":
                     outcomeRights.append("<tr data-iso='" + $(this).data('iso') + "'><td class='vote-list'><img src='img/flags_small/" + $(this).data('iso') + ".png' alt='" + $(this).data('iso') + "' /></td><td class='vote-list'>" + $(this).data('name') + "</td><td class='vote-list' style='width:auto;text-align: center;'>In Favour</td>");
@@ -196,39 +142,38 @@ var calculateOutcome = function () {
                     break;
             }
         });
+        var secondOutcome = calculateSecondOutcome();
+        yes += secondOutcome.yes;
+        no += secondOutcome.no;
+        uncast += secondOutcome.uncast;
+        veto = veto || secondOutcome.veto;
+        //console.log("Yes: " + yes + ",No: " + no + ",Abstain: " + abstain + ",Uncast: " + uncast);
         if (uncast > 0) {
-            outcomeMessage.html("First Vote still in progress!");
+            outcomeMessage.html("Vote still in progress!");
             outcomeResult.text("No Results yet");
             return "inconclusive";
         }
-        if (pass > 0) {
-            outcomeRights.children().remove();
-            secondVoteList.find('button').prop('disabled', false);
-            return calculateSecondOutcome();
-        }
-        secondVoteList.find('button').prop('disabled', true)
-            .removeClass('highlight');
         if (abstain > 0) {
-            absText = abstain > 1 ? " and " + abstain + " Abstention" : " and " + abstain + " Abstentions";
+            absText = abstain > 1 ? " and " + abstain + " Abstentions" : " and " + abstain + " Abstention";
         }
         if (yes > 0) {
-            yesText = yes > 1 ? yes + " Vote in Favour" : yes + " Votes in Favour";
+            yesText = yes > 1 ? yes + " Votes in Favour" : yes + " Vote in Favour";
         } else {
             yesText = "No Vote in Favour";
         }
         if (no > 0) {
-            noText = no > 1 ? ", " + no + " Vote Against" : ", " + no + " Votes Against";
+            noText = no > 1 ? ", " + no + " Votes Against" : ", " + no + " Vote Against";
         } else {
             noText = ", No Vote Against";
-        }
-        if (vote.veto && veto) {
-            outcomeMessage.html("Vote <b>failed</b> due to a Veto!");
-            outcomeResult.html(yesText + noText + absText);
-            return "failed"
         }
         voted = yes + no;
         if (!isNaN(parseInt(vote.majority))) {
             if (yes >= parseInt(vote.majority)) {
+                if (vote.veto && veto) {
+                    outcomeMessage.html("Vote <b>failed</b> due to a Veto!");
+                    outcomeResult.html(yesText + noText + absText);
+                    return "failed"
+                }
                 outcomeMessage.html("Vote <b>succeeded</b>!");
                 outcomeResult.html(yesText + noText + absText);
                 return "succeeded"
@@ -239,14 +184,27 @@ var calculateOutcome = function () {
             }
         } else if (vote.majority == "simple") {
             if (yes >= parseInt((voted * 0.5) + 1)) {
+                if (vote.veto && veto) {
+                    outcomeMessage.html("Vote <b>failed</b> due to a Veto!");
+                    outcomeResult.html(yesText + noText + absText);
+                    return "failed"
+                }
                 outcomeMessage.html("Vote <b>succeeded</b>!");
                 outcomeResult.html(yesText + noText + absText);
                 return "succeeded"
             } else {
+                outcomeMessage.html("Vote <b>failed</b>!");
+                outcomeResult.html(yesText + noText + absText);
                 return "failed";
             }
         } else if (vote.majority == "twothird") {
-            if (yes >= parseInt((voted * 2 / 3) + 1)) {
+            needed = voted % 3 == 0 ? (voted * 2 / 3) : parseInt((voted * 2 / 3) + 1);
+            if (yes >= needed) {
+                if (vote.veto && veto) {
+                    outcomeMessage.html("Vote <b>failed</b> due to a Veto!");
+                    outcomeResult.html(yesText + noText + absText);
+                    return "failed"
+                }
                 outcomeMessage.html("Vote <b>succeeded</b>!");
                 outcomeResult.html(yesText + noText + absText);
                 return "succeeded"
@@ -277,12 +235,12 @@ var calculateOutcome = function () {
             return "inconclusive";
         }
         if (yes > 0) {
-            yesText = yes > 1 ? yes + " Vote in Favour" : yes + " Votes in Favour";
+            yesText = yes > 1 ? yes + " Votes in Favour" : yes + " Vote in Favour";
         } else {
             yesText = "No Vote in Favour";
         }
         if (no > 0) {
-            noText = no > 1 ? ", " + no + " Vote Against" : ", " + no + " Votes Against";
+            noText = no > 1 ? ", " + no + " Votes Against" : ", " + no + " Vote Against";
         } else {
             noText = ", No Vote Against";
         }
@@ -308,7 +266,8 @@ var calculateOutcome = function () {
                 return "failed";
             }
         } else if (vote.majority == "twothird") {
-            if (yes >= parseInt((voted * 2 / 3) + 1)) {
+            needed = voted % 3 == 0 ? (voted * 2 / 3) : parseInt((voted * 2 / 3) + 1);
+            if (yes >= needed) {
                 outcomeMessage.html("Vote <b>succeeded</b>!");
                 outcomeResult.html(yesText + noText);
                 return "succeeded"
@@ -445,8 +404,7 @@ $('#vote-prepare-divide').bind('change', function () {
 });
 $('#vote-prepare-rollcall').click(function () {
     firstVoteList.find('button').removeClass('highlight');
-    secondVoteList.find('button').prop('disabled', true)
-        .removeClass('highlight');
+    prepareSecondVotingList();
     calculateOutcome();
     window.location.hash = "1";
     var tabs = $("#tabs");
@@ -458,7 +416,9 @@ $('#vote-prepare-rollcall').click(function () {
     return false;
 });
 $('#vote-prepare-first-next').click(function () {
-    var revote = calculateOutcome() == "revote" ? "2" : "3";
+    var revote = secondVoteList.children().filter(function () {
+        return $(this).data('passing');
+    }).length > 0 ? 2 : 3;
     window.location.hash = revote;
     var tabs = $("#tabs");
     tabs.find("a[href='#tabs-1']").removeClass("tabulous_active");

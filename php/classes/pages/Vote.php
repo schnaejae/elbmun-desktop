@@ -34,7 +34,7 @@ class Vote extends Page
             $observerSentence = "and " . $observer . " Observers ";
         }
         $content = "<h1>Prepare the Vote</h1>
-            <table style='width: 80%;margin-left:auto;margin-right: auto;'>
+            <table style='width: 60%;margin-left:auto;margin-right: auto;'>
                 <tr><th style='text-align: right; width: 140px; font-size:1.3em'>Vote Type</th><td class='label-cell'>Substantial</td><td><input name='vote-prepare-type' type='radio' id='vote-prepare-type-substantial' " . ($this->type == "substantial" ? "checked='checked' " : "") . "/></td><td class='label-cell'>Procedural</td><td colspan='4'><input type='radio' name='vote-prepare-type' id='vote-prepare-type-procedural' " . ($this->type == "procedural" ? "checked='checked' " : "") . "/></td></tr>
                 <tr><th style='text-align: right; font-size:1.3em'>Majority Parameters</th><td class='label-cell'>Simple</td><td><input name='vote-prepare-majority' type='radio' id='vote-prepare-majority-simple' " . ($this->majority == "simple" ? "checked='checked' " : "") . "/></td><td class='label-cell'>Two-Third</td><td><input type='radio' name='vote-prepare-majority' id='vote-prepare-majority-twothird' " . ($this->majority == "twothird" ? "checked='checked' " : "") . "/></td><td class='label-cell'>Custom</td><td class='label-cell'><input type='radio' name='vote-prepare-majority' id='vote-prepare-majority-custom' " . (is_numeric($this->majority) ? "checked='checked' " : "") . "/></td><td><input class='input-mini' type='number' min='1' value='" . (is_numeric($this->majority) ? $this->majority : 9) . "' id='vote-prepare-majority-custom-number'/></td></tr>
                 <tr><th style='text-align: right; font-size:1.3em'>Special Settings</th><td class='label-cell'>P5-Veto</td><td><input type='checkbox' id='vote-prepare-veto' " . ($this->veto == "true" ? "checked='checked' " : "") . "/></td><td class='label-cell'>Divide House</td><td colspan='4'><input type='checkbox' id='vote-prepare-divide' " . ($this->divide == "true" ? "checked='checked' " : "") . "/></td></tr>
@@ -91,10 +91,10 @@ class Vote extends Page
     private function outcome()
     {
         $content = "<h1>Outcome of the Vote</h1>
-            <div class='msg-alert' style='border: 1px solid #CECECE; background-color:#FFFFFF;width: 80%;margin-left:auto;margin-right: auto;margin-bottom:1.4em;'><h1 id='vote-outcome-message'>Vote was successful</h1></div>
-            <div class='msg-alert' style='border: 1px solid #CECECE; background-color:#FFFFFF;width: 80%;margin-left:auto;margin-right: auto;'><p id='vote-outcome-result'>No Results Yet</p></div>
+            <div class='msg-alert' style='border: 1px solid #CECECE; background-color:#FFFFFF;width: 60%;margin-left:auto;margin-right: auto;margin-bottom:1.4em;'><h1 id='vote-outcome-message'>Vote was successful</h1></div>
+            <div class='msg-alert' style='border: 1px solid #CECECE; background-color:#FFFFFF;width: 60%;margin-left:auto;margin-right: auto;'><p id='vote-outcome-result'>No Results Yet</p></div>
             <h1>Rights to Explain Vote</h1>
-            <table style='width: 80%;margin-left: auto;margin-right: auto;'>
+            <table style='width: 60%;margin-left: auto;margin-right: auto;'>
                 <tbody id='vote-outcome-rights'>
                 </tbody>
             </table>
@@ -106,6 +106,7 @@ class Vote extends Page
     {
         $this->setTitle("Vote");;
         $this->enableTabs();
+        $this->enableWideContent();
         $dom = new DOMDocument();
         $dom->load("./resources/state.xml");
         $config = $dom->getElementsByTagName("config")->item(0);

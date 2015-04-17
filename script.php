@@ -27,7 +27,4 @@ if (isset($_GET['a']) OR isset($_POST['a'])) {
     echo json_encode(false);
 }
 
-
-
-
 ?>

@@ -334,7 +334,7 @@ class Debate extends Page
                 $present++;
             }
         }
-        $twothird = intval($present * 2 / 3 + 1);
+        $twothird = $present%3==0?$present * 2 / 3:intval($present * 2 / 3 + 1);
         $simple = intval($present / 2 + 1);
         $this->setHeader("<div class='msg-alert'><h1>" . $this->committee->getAttribute('name') . " - " . $topic . "</h1><p class='msg'>Present: " . $present . ", Two-Third: " . $twothird . ", Simple: " . $simple . "</p></div>");
         $content =
